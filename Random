@@ -1,0 +1,111 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class Random extends JFrame
+{
+   private JButton randomBtn, playAgain;
+   private JPanel panel;
+   private JTextField txtFld, inputFld;
+   private JLabel label, label2, label3;
+   private static int randomNum;
+   private double inputNum;
+   
+   public static void main(String[]args)
+   {
+      Random r = new Random();
+      r.setSize(250,200);
+      r.setVisible(true);
+      r.setForeground(Color.blue);
+      r.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      randomNum = getRandom(1,1000);
+   }
+   
+   private static int getRandom(int min, int max)
+   {
+      double newRandom = min + Math.random()*((max - min)+1);
+      int newIntRandom = (int)newRandom;
+      return newIntRandom;
+   }
+   
+   public Random()
+   {
+      setTitle("Guess the value?");
+      setResizable(false);
+      panel = new JPanel();
+      
+      label = new JLabel();
+      label.setText("<html>I have a number between 1 and 1000.<br>"+
+                     "Can you guess my number?<br>");
+      panel.add(label);
+      
+      randomBtn = new JButton("Guess Number");
+      panel.add(randomBtn);
+      
+      playAgain = new JButton("Play Again");
+      panel.add(playAgain);
+      
+      label2 = new JLabel();
+      label2.setText("Please enter your guess:");
+      panel.add(label2);
+      
+      inputFld = new JTextField(null, 20);
+      inputFld.setText("");
+      panel.add(inputFld);   
+      
+      label3 = new JLabel();
+      label3.setText("Hint:");
+      panel.add(label3); 
+    
+      txtFld = new JTextField(null, 10);
+      panel.add(txtFld);
+      
+      add(panel);
+      
+      ButtonHandler handler = new ButtonHandler();
+      randomBtn.addActionListener(handler);
+      playAgain.addActionListener(handler);
+   }
+   private class ButtonHandler implements ActionListener
+   {
+      public void actionPerformed (ActionEvent ev)
+      {
+         if(ev.getSource() == randomBtn)
+         {
+            inputNum = Integer.parseInt(inputFld.getText());
+            if (inputNum > randomNum)
+            {
+               txtFld.setBackground(Color.red);
+               txtFld.setForeground(Color.blue);
+               txtFld.setText("Too High");
+               randomBtn.setText("Guess again");
+               inputFld.setText("");
+            
+            }
+            else if (inputNum < randomNum)
+            {
+                txtFld.setBackground(Color.blue);
+                txtFld.setForeground(Color.yellow);
+                txtFld.setText("Too Low");
+                randomBtn.setText("Guess again"); 
+                inputFld.setText("");
+            }
+            else if (inputNum == randomNum)
+            {
+                txtFld.setBackground(Color.green);
+                txtFld.setForeground(Color.black);
+                txtFld.setText("Correct!");   
+            }
+         
+         }
+         else if (ev.getSource() == playAgain)
+         {
+            randomNum = getRandom(1,5);
+            txtFld.setBackground(Color.white);
+            txtFld.setText("");
+            inputFld.setText("");
+            randomBtn.setText("Guess Number");
+         }
+      }
+   }
+}
